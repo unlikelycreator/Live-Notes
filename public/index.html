@@ -6,131 +6,178 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kabootr - Real-time File & Text Sharing</title>
     <style>
-        /* Hide scrollbars */
-        ::-webkit-scrollbar { display: none; }
-        body { -ms-overflow-style: none; }
-        
-        /* Professional Glassmorphism UI */
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        body {
+            -ms-overflow-style: none;
+        }
+
         body {
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
             height: 100vh;
             margin: 0;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
             font-family: 'Poppins', sans-serif;
-            color: #fff;
+            color: #333;
+            background: #f4f4f4;
         }
 
-        .container {
-            width: 100%;
-            max-width: 800px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px);
-            padding: 25px;
-            border-radius: 16px;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        h1 {
-            font-size: 24px;
-            margin-bottom: 15px;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            font-size: 20px;
             font-weight: 600;
         }
 
-        textarea {
-            width: 90%;
-            height: 200px;
-            padding: 15px;
-            font-size: 16px;
-            border-radius: 12px;
-            border: none;
-            resize: none;
-            outline: none;
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
-            font-weight: 500;
-            transition: 0.3s;
-        }
-
-        textarea::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        textarea:focus {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .upload-section {
-            margin-top: 15px;
+        .h-buttons {
             display: flex;
-            flex-direction: column;
             gap: 10px;
         }
 
-        .upload-btn {
-            background: #00c6ff;
-            background: linear-gradient(to right, #0072ff, #00c6ff);
-            border: none;
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
+        .description {
+            font-size: 12px;
+            font-weight: 100;
+            color: gray;
+        }
+
+        .add-btn {
+            background: black;
             color: white;
-            font-weight: 600;
-            transition: 0.3s;
-        }
-
-        .upload-btn:hover {
-            transform: scale(1.05);
-        }
-
-        input[type="file"] {
-            padding: 8px;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
-            outline: none;
             border: none;
+            padding: 10px 15px;
+            cursor: pointer;
             font-size: 14px;
         }
 
-        .file-list {
-            margin-top: 15px;
-            text-align: left;
+        .notify-btn {
+            background: crimson;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .add-btn:hover {
+            opacity: 0.8;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        .popup button {
+            margin-top: 10px;
+            padding: 10px;
+            background: black;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 5;
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .left-section {
+            flex: 70%;
+            background: white;
+            padding: 20px;
+        }
+
+        .right-section {
+            flex: 30%;
+            background: white;
+            padding: 20px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        textarea {
+            width: 100%;
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+            padding: 10px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            resize: none;
+            color: #333;
         }
 
         .file-list a {
             display: block;
-            padding: 8px;
+            padding: 8px 0;
             text-decoration: none;
-            color: #00c6ff;
+            color: black;
             font-weight: 500;
-            transition: 0.3s;
         }
 
         .file-list a:hover {
             text-decoration: underline;
-            transform: translateX(4px);
+            color: orange;
         }
-
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <h1>Kabootr - Real-time File & Text Sharing</h1>
-        <textarea id="sharedText" placeholder="Start typing here..."></textarea>
-
-        <div class="upload-section">
-            <input type="file" id="fileInput">
-            <button class="upload-btn" onclick="uploadFile()">Upload File</button>
+    <div class="header">
+        <div>
+            <h1>Kabootr</h1>
+            <p class="description">A realtime notes and file sharing app</p>
         </div>
+        <div class="h-buttons">
+            <button class="add-btn" onclick="openPopup()">📁 Add File</button>
+            <button class="notify-btn" onclick="sendNotification()">🔔 Notify</button>
+        </div>
+    </div>
 
-        <h3>Shared Files</h3>
-        <div class="file-list" id="fileList"></div>
+    <div class="popup-overlay" id="popupOverlay" onclick="closePopup()"></div>
+    <div class="popup" id="filePopup">
+        <input type="file" id="fileInput">
+        <button onclick="uploadFile()">Upload</button>
+        <button onclick="closePopup()">Close</button>
+    </div>
+
+    <div class="main-container">
+        <div class="left-section">
+            <textarea id="sharedText" placeholder="Start typing here..."></textarea>
+        </div>
+        <div class="right-section">
+            <h3>Shared Files</h3>
+            <div class="file-list" id="fileList"></div>
+        </div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -159,11 +206,12 @@
                 method: 'POST',
                 body: formData
             })
-            .then(res => res.json())
-            .then(data => {
-                socket.emit('fileUploaded', data);
-            })
-            .catch(err => console.error(err));
+                .then(res => res.json())
+                .then(data => {
+                    socket.emit('fileUploaded', data);
+                    closePopup();
+                })
+                .catch(err => console.error(err));
         }
 
         socket.on('fileUploaded', (file) => {
@@ -173,6 +221,30 @@
             link.download = file.fileName;
             fileList.appendChild(link);
         });
+
+        function openPopup() {
+            document.getElementById('filePopup').style.display = 'block';
+            document.getElementById('popupOverlay').style.display = 'block';
+        }
+
+        function closePopup() {
+            document.getElementById('filePopup').style.display = 'none';
+            document.getElementById('popupOverlay').style.display = 'none';
+        }
+
+        function sendNotification() {
+            console.log("sending..")
+            fetch("http://192.168.1.5:3000/send-sms")
+                .then(response => response.json())
+                .then(data => {
+                    alert("Notification Sent!");
+                    console.log("Response:", data);
+                })
+                .catch(error => {
+                    alert("Failed to send notification!");
+                    console.error("Error:", error);
+                });
+        }
     </script>
 </body>
 
