@@ -234,7 +234,7 @@
 
         function sendNotification() {
             console.log("sending..")
-            fetch("http://192.168.1.5:3000/send-sms")
+            fetch("https://live-notes-5k5j.onrender.com/send-sms")
                 .then(response => response.json())
                 .then(data => {
                     alert("Notification Sent!");
