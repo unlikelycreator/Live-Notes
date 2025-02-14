@@ -4,10 +4,28 @@ const socketIo = require('socket.io');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
+const cors = require('cors');
+const axios = require('axios');
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
+
+app.use(cors()); // Allow all origins (for testing)
+app.use(express.json());
+
+// Proxy route to bypass CORS
+app.get('/send-sms', async (req, res) => {
+    try {
+        const url = "https://dealsms.in/api/send?number=919011484104&type=text&message=Hansraj%20want%20to%20contact%20you&instance_id=67AEF14389DEC&access_token=677fb4df0f3a8";
+        const response = await axios.get(url);
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to send SMS" });
+    }
+});
+
+
 
 // Store uploaded files in 'uploads' folder
 const upload = multer({ dest: 'uploads/' });
